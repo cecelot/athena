@@ -1,12 +1,10 @@
 #![deny(clippy::pedantic)]
 use crate::{
-    log::{abort, info},
-    providers::{Provider, SourceBin, TSPlay},
+    log::info,
+    providers::{Gist, Provider, SourceBin, TSPlay},
 };
-use anyhow::Context;
-use clap::{Parser, ValueEnum};
-use std::{env, fs, path::PathBuf, process};
-use uuid::Uuid;
+use clap::{Args, Parser, Subcommand};
+use std::path::PathBuf;
 
 mod log;
 mod providers;
@@ -17,33 +15,53 @@ mod providers;
 #[command(propagate_version = true)]
 struct Cli {
     /// The provider to upload the paste to.
+    #[clap(subcommand)]
     provider: ProviderChoice,
-
-    /// The file to paste. If not specified, the contents of the file opened by $EDITOR
-    /// is used as the contents of the paste.
-    file: Option<PathBuf>,
 }
 
-#[derive(Copy, Clone, ValueEnum)]
+#[derive(Args, Clone)]
+pub struct PathOptions {
+    /// The file to paste.
+    path: Option<PathBuf>,
+}
+
+#[derive(Args, Clone)]
+pub struct GistOptions {
+    /// A GitHub personal access token.
+    #[arg(required = true, short, long)]
+    token: String,
+
+    /// The files to add to this gist.
+    #[arg(required = true)]
+    paths: Vec<PathBuf>,
+
+    /// The description of the gist.
+    #[arg(short, long)]
+    description: Option<String>,
+}
+
+#[derive(Clone, Subcommand)]
 enum ProviderChoice {
-    /// https://sourceb.in
-    Sourcebin,
-    /// A shortener for https://www.typescriptlang.org/play
-    TSPlay,
+    /// Uploads to https://sourceb.in
+    #[clap(name = "sourcebin")]
+    SourceBin(PathOptions),
+
+    /// Creates a link for https://www.typescriptlang.org/play and shortens it using https://tsplay.dev
+    #[clap(name = "tsplay")]
+    TSPlay(PathOptions),
+
+    /// Uploads to https://gist.github.com (requires authentication)
+    #[clap(name = "gist")]
+    Gist(GistOptions),
 }
 
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
-    let content = match cli.file {
-        Some(file) => {
-            fs::read_to_string(&file).context(format!("Failed to read file: {}", file.display()))
-        }
-        None => input(),
-    }?;
     let url = match cli.provider {
-        ProviderChoice::Sourcebin => <SourceBin as Provider>::upload(content),
-        ProviderChoice::TSPlay => <TSPlay as Provider>::upload(content),
+        ProviderChoice::SourceBin(options) => upload::<SourceBin>(options),
+        ProviderChoice::TSPlay(options) => upload::<TSPlay>(options),
+        ProviderChoice::Gist(options) => upload::<Gist>(options),
     }?;
 
     info(&format!("uploaded to {url}"));
@@ -51,20 +69,7 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Reads the contents of the temporary file /tmp/athena/xxx.paste and returns it as a [`String`](std::str::String).
-fn input() -> anyhow::Result<String> {
-    fs::create_dir_all("/tmp/athena").context("Failed to create tmp directory")?;
-
-    let path = format!("/tmp/athena/{}.paste", Uuid::new_v4());
-    let editor = env::var("EDITOR").context("No $EDITOR set")?;
-
-    let mut cmd = process::Command::new(editor)
-        .arg(&path)
-        .spawn()
-        .context("failed to start $EDITOR")?;
-    cmd.wait().context("$EDITOR wasn't running")?;
-
-    let input = fs::read_to_string(&path).unwrap_or_else(|_| abort("no input specified"));
-
-    Ok(input)
+/// A helper function for calling [`Provider::upload`].
+fn upload<P: Provider>(options: P::Options) -> anyhow::Result<String> {
+    P::upload(options)
 }

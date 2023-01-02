@@ -1,4 +1,5 @@
-use super::Provider;
+use super::{content, Provider};
+use crate::PathOptions;
 use anyhow::Context;
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
@@ -6,7 +7,10 @@ use serde::{Deserialize, Serialize};
 pub struct SourceBin;
 
 impl Provider for SourceBin {
-    fn upload(content: String) -> anyhow::Result<String> {
+    type Options = PathOptions;
+
+    fn upload(options: Self::Options) -> anyhow::Result<String> {
+        let content = content(options.path)?;
         let body = Request::new(content);
         let res = Client::new()
             .post("https://sourceb.in/api/bins")
