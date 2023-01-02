@@ -4,10 +4,12 @@ use std::{env, fs, path::PathBuf, process};
 use uuid::Uuid;
 
 mod gist;
+mod rsplay;
 mod sourcebin;
 mod tsplay;
 
 pub use gist::Gist;
+pub use rsplay::RSPlay;
 pub use sourcebin::SourceBin;
 pub use tsplay::TSPlay;
 

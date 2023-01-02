@@ -1,7 +1,7 @@
 #![deny(clippy::pedantic)]
 use crate::{
     log::info,
-    providers::{Gist, Provider, SourceBin, TSPlay},
+    providers::{Gist, Provider, RSPlay, SourceBin, TSPlay},
 };
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
@@ -50,6 +50,10 @@ enum ProviderChoice {
     #[clap(name = "tsplay")]
     TSPlay(PathOptions),
 
+    /// Creates a link to the Rust Playground (https://play.rust-lang.org/)
+    #[clap(name = "rsplay")]
+    RSPlay(PathOptions),
+
     /// Uploads to https://gist.github.com (requires authentication)
     #[clap(name = "gist")]
     Gist(GistOptions),
@@ -62,6 +66,7 @@ fn main() -> anyhow::Result<()> {
         ProviderChoice::SourceBin(options) => SourceBin::upload(options),
         ProviderChoice::TSPlay(options) => TSPlay::upload(options),
         ProviderChoice::Gist(options) => Gist::upload(options),
+        ProviderChoice::RSPlay(options) => RSPlay::upload(options),
     }?;
 
     info(&format!("uploaded to {url}"));

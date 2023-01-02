@@ -16,4 +16,5 @@ athena <provider> [path/to/file]
 
 - [sourceb.in](https://sourceb.in)
 - [tsplay.dev](https://tsplay-dev.vercel.app)
+- [Rust Playground](https://play.rust-lang.org)
 - [GitHub Gists](https://gist.github.com)
