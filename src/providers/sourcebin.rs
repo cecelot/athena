@@ -18,7 +18,6 @@ impl Provider for SourceBin {
             .send()
             .context("Failed to send request")?;
         let res: Response = res.json().context("Failed to parse response")?;
-
         Ok(format!("https://sourceb.in/{}", res.key))
     }
 }

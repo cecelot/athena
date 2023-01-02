@@ -12,14 +12,12 @@ impl Provider for RSPlay {
     fn upload(options: Self::Options) -> anyhow::Result<String> {
         let content = content(options.path)?;
         let body = Request::new(content);
-
         let res = Client::new()
             .post("https://play.rust-lang.org/meta/gist")
             .json(&body)
             .send()
             .context("Failed to send request")?;
         let res: Response = res.json().context("Failed to parse response")?;
-
         Ok(format!("https://play.rust-lang.org/?gist={}", res.id))
     }
 }
