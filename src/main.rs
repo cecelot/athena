@@ -33,8 +33,6 @@ enum ProviderChoice {
 fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
-    fs::create_dir_all("/tmp/athena").context("Failed to create tmp directory")?;
-
     let content = match cli.file {
         Some(file) => {
             fs::read_to_string(&file).context(format!("Failed to read file: {}", file.display()))
@@ -52,6 +50,8 @@ fn main() -> anyhow::Result<()> {
 
 /// Reads the contents of the temporary file /tmp/athena/xxx.paste and returns it as a [`String`](std::str::String).
 fn input() -> anyhow::Result<String> {
+    fs::create_dir_all("/tmp/athena").context("Failed to create tmp directory")?;
+
     let path = format!("/tmp/athena/{}.paste", Uuid::new_v4());
     let editor = env::var("EDITOR").context("No $EDITOR set")?;
 
