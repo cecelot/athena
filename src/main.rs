@@ -50,9 +50,10 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Reads the contents of the temporary file /tmp/athena/xxx.paste and returns it as a [`String`](std::str::String).
 fn input() -> anyhow::Result<String> {
     let path = format!("/tmp/athena/{}.paste", Uuid::new_v4());
-    let editor = env::var("EDITOR").context("no $EDITOR set")?;
+    let editor = env::var("EDITOR").context("No $EDITOR set")?;
 
     let mut cmd = process::Command::new(editor)
         .arg(&path)
