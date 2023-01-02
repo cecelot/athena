@@ -1,6 +1,6 @@
 # athena
 
-A small command-line utility to quickly upload code to select providers (see [#Providers](#Providers)).
+A small command-line utility to quickly upload code to select providers (see [Providers](#Providers)).
 
 ## Usage
 
