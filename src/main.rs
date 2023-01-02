@@ -59,17 +59,12 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     let url = match cli.provider {
-        ProviderChoice::SourceBin(options) => upload::<SourceBin>(options),
-        ProviderChoice::TSPlay(options) => upload::<TSPlay>(options),
-        ProviderChoice::Gist(options) => upload::<Gist>(options),
+        ProviderChoice::SourceBin(options) => SourceBin::upload(options),
+        ProviderChoice::TSPlay(options) => TSPlay::upload(options),
+        ProviderChoice::Gist(options) => Gist::upload(options),
     }?;
 
     info(&format!("uploaded to {url}"));
 
     Ok(())
-}
-
-/// A helper function for calling [`Provider::upload`].
-fn upload<P: Provider>(options: P::Options) -> anyhow::Result<String> {
-    P::upload(options)
 }
