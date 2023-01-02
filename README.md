@@ -1,6 +1,6 @@
 # athena
 
-An easy way to upload content to a variety of pastebin services (soon™), directly from your terminal!
+A small command-line utility to quickly upload code to select providers (see [#Providers](#Providers)).
 
 ## Usage
 
