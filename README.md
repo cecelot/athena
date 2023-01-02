@@ -15,3 +15,4 @@ athena <provider> [path/to/file]
 ## Providers
 
 - [sourceb.in](https://sourceb.in)
+- [tsplay.dev](https://tsplay-dev.vercel.app)

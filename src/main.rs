@@ -1,7 +1,7 @@
 #![deny(clippy::pedantic)]
 use crate::{
     log::{abort, info},
-    providers::{sourcebin::SourceBin, Provider},
+    providers::{Provider, SourceBin, TSPlay},
 };
 use anyhow::Context;
 use clap::{Parser, ValueEnum};
@@ -28,6 +28,8 @@ struct Cli {
 enum ProviderChoice {
     /// https://sourceb.in
     Sourcebin,
+    /// A shortener for https://www.typescriptlang.org/play
+    TSPlay,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -40,8 +42,9 @@ fn main() -> anyhow::Result<()> {
         None => input(),
     }?;
     let url = match cli.provider {
-        ProviderChoice::Sourcebin => <SourceBin as Provider>::upload(content)?,
-    };
+        ProviderChoice::Sourcebin => <SourceBin as Provider>::upload(content),
+        ProviderChoice::TSPlay => <TSPlay as Provider>::upload(content),
+    }?;
 
     info(&format!("uploaded to {url}"));
 
