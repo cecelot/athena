@@ -1,11 +1,5 @@
-use super::{content, Provider};
+use super::api::prelude::*;
 use crate::GistOptions;
-use anyhow::Context;
-use reqwest::{
-    blocking::Client,
-    header::{ACCEPT, USER_AGENT},
-};
-use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::PathBuf};
 
 pub struct Gist;
@@ -18,8 +12,8 @@ impl Provider for Gist {
         let body = Request::new(options.description, files);
         let res = Client::new()
             .post("https://api.github.com/gists")
-            .header(ACCEPT, "application/vnd.github+json")
-            .header(USER_AGENT, "Athena: command-line paste uploader")
+            .header(header::ACCEPT, "application/vnd.github+json")
+            .header(header::USER_AGENT, "Athena: command-line paste uploader")
             .bearer_auth(options.token)
             .json(&body)
             .send()

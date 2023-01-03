@@ -1,8 +1,4 @@
-use super::{content, Provider};
-use crate::PathOptions;
-use anyhow::Context;
-use reqwest::blocking::Client;
-use serde::{Deserialize, Serialize};
+use super::api::prelude::*;
 
 pub struct RSPlay;
 

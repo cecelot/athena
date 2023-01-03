@@ -1,7 +1,7 @@
 #![deny(clippy::pedantic)]
 use crate::{
     log::info,
-    providers::{Gist, Provider, RSPlay, SourceBin, TSPlay},
+    providers::{api::Provider, Gist, RSPlay, SourceBin, TSPlay},
 };
 use clap::{Args, Parser, Subcommand};
 use std::path::PathBuf;
