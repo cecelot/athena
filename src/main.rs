@@ -42,19 +42,19 @@ pub struct GistOptions {
 
 #[derive(Clone, Subcommand)]
 enum ProviderChoice {
-    /// Uploads to https://sourceb.in
+    /// Uploads to <https://sourceb.in>
     #[clap(name = "sourcebin")]
     SourceBin(PathOptions),
 
-    /// Creates a link for https://www.typescriptlang.org/play and shortens it using https://tsplay.dev
+    /// Creates a link for <https://www.typescriptlang.org/play> and shortens it using <https://tsplay.dev>
     #[clap(name = "tsplay")]
     TSPlay(PathOptions),
 
-    /// Creates a link to the Rust Playground (https://play.rust-lang.org/)
+    /// Creates a link to the Rust Playground (<https://play.rust-lang.org/>)
     #[clap(name = "rsplay")]
     RSPlay(PathOptions),
 
-    /// Uploads to https://gist.github.com (requires authentication)
+    /// Uploads to <https://gist.github.com> (requires authentication)
     #[clap(name = "gist")]
     Gist(GistOptions),
 }

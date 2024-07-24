@@ -50,7 +50,7 @@ pub mod api {
     }
 
     pub mod prelude {
-        pub use super::{content, input, Provider};
+        pub use super::{content, Provider};
         pub use crate::PathOptions;
         pub use anyhow::Context;
         pub use reqwest::{blocking::Client, header};
